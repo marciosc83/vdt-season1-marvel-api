@@ -4,8 +4,8 @@ Cypress.Commands.add('setToken', function(){
         method: 'POST',
         url: '/sessions',
         body: {
-            email: 'marciosc@gmail.com',
-            password: 'password'
+            email: 'papito@qacademy.io',
+            password: 'qa-cademy'
         }
     }).then(function(response){
         expect(response.status).to.eql(200)
