@@ -48,7 +48,7 @@ describe('POST /characters', function () {
         })
     })
 
-    context('Validação de campos obrigatórios não preenchidos', function () {
+    context('Validação de campos obrigatórios', function () {
         const charactersList = [
             {
                 //"name": "Charles",
