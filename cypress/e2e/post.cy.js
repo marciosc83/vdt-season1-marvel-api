@@ -3,18 +3,8 @@
 describe('POST /characters', function(){
 
     before(function(){
-        cy.request({
-            method: 'POST',
-            url: '/sessions',
-            body: {
-                email: 'marciosc@gmail.com',
-	            password: 'malibu100'
-            }
-        }).then(function(response){
-            expect(response.status).to.eql(200)
-            cy.log(response.body.token)
-            Cypress.env('token', response.body.token)
-        })
+        cy.back2ThePast()
+        cy.setToken()
     })
 
     it('Deve cadastrar personagem', function(){
@@ -26,16 +16,35 @@ describe('POST /characters', function(){
             active: true
         }
 
-        cy.request({
-            method: 'POST',
-            url: '/characters',
-            body: character,
-            headers: {
-                Authorization: Cypress.env('token')
-            }
-        }).then(function(response){
-            expect(response.status).to.eql(201)
-            cy.log(response.body.token)
+        cy.postCharacter(character)
+            .then(function(response){
+                expect(response.status).to.eql(201)
+                expect(response.body.character_id).to.have.lengthOf(24)
+                expect(response.body.character_id.length).to.eql(24)
+            })
+    })
+
+    context('Quando um personagem já existe',function(){
+
+        const character = {
+            "name": "Charles",
+            "alias": "Professor",
+            "team": ["x-men"],
+            "active": true
+        }
+
+        before(function(){
+            cy.postCharacter(character).then(function(response){
+                expect(response.status).to.eql(201)
+                expect(response.body.character_id).to.have.lengthOf(24)
+            })
         })
+
+        it('Não deve cadastrar duplicado', function(){
+            cy.postCharacter(character).then(function(response){
+                expect(response.status).to.eql(400)
+                expect(response.body.error).to.eql('Duplicate character')
+            })
+        }) 
     })
 })
