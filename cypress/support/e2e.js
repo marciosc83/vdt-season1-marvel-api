@@ -5,7 +5,7 @@ Cypress.Commands.add('setToken', function(){
         url: '/sessions',
         body: {
             email: 'marciosc@gmail.com',
-            password: 'malibu100'
+            password: 'password'
         }
     }).then(function(response){
         expect(response.status).to.eql(200)
