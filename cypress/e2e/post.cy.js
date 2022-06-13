@@ -49,38 +49,53 @@ describe('POST /characters', function () {
     })
 
     context('Validação de campos obrigatórios', function () {
-        const charactersList = [
+
+        const characterScenarios = [
             {
-                //"name": "Charles",
-                "alias": "Professor",
-                "team": ["x-men"],
-                "active": true
-            }, {
-                "name": "Charles",
-                //"alias": "Professor",
-                "team": ["x-men"],
-                "active": true
-            }, {
-                "name": "Charles",
-                "alias": "Professor",
-                //"team": ["x-men"],
-                "active": true
-            }, {
-                "name": "Charles",
-                "alias": "Professor",
-                "team": ["x-men"]
-                //"active": true        
+                "payload": {
+                    //"name": "Charles",
+                    "alias": "Professor",
+                    "team": ["x-men"],
+                    "active": true
+                },
+                "validationMessage": '"name" is required'
+            },
+            {
+                "payload": {
+                    "name": "Charles",
+                    //"alias": "Professor",
+                    "team": ["x-men"],
+                    "active": true
+                },
+                "validationMessage": '"alias" is required'
+            },
+            {
+                "payload": {
+                    "name": "Charles",
+                    "alias": "Professor",
+                    //"team": ["x-men"],
+                    "active": true
+                },
+                "validationMessage": '"team" is required'
+            },
+            {
+                "payload": {
+                    "name": "Charles",
+                    "alias": "Professor",
+                    "team": ["x-men"]
+                    //"active": true
+                },
+                "validationMessage": '"active" is required'
             }
+
         ]
 
-        const validationMessages = ['"name" is required', '"alias" is required', '"team" is required', '"active" is required']
-
         it('Campos obrigatórios', function () {
-            charactersList.forEach(function(item, index){
-                cy.postCharacter(charactersList[index]).then(function (response) {
+            characterScenarios.forEach(function (characterScenario) {
+                cy.postCharacter(characterScenario.payload).then(function (response) {
                     expect(response.status).to.eql(400)
                     expect(response.body.error).to.eql('Bad Request')
-                    expect(response.body.validation.body.message).to.eql(validationMessages[index])
+                    expect(response.body.validation.body.message).to.eql(characterScenario.validationMessage)
                 })
             })
         })
